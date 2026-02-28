@@ -23,9 +23,6 @@ The United States maintains over 617,000 bridges, with approximately 42,000 clas
 To replicate this project and its environment, structure your repository as follows:
 
 ```text
-├── data/
-│   ├── raw/                              # Original NBI datasets (2023, 2024, 2025)
-│   └── processed/                        # Cleaned, engineered, and SMOTE-balanced data
 ├── notebooks/
 │   ├── 01_Final_Report.ipynb             # Project executive summary and business value
 │   ├── 02_Data_Cleaning_and_Preprocessing.ipynb  # Missing value imputation, leakage removal
@@ -37,7 +34,25 @@ To replicate this project and its environment, structure your repository as foll
 │   ├── 07_Advanced_Models.ipynb          # Neural Networks (MLP) and HistGradientBoosting
 │   ├── 08_Model_Evaluations.ipynb        # High-level evaluation of all 17 models
 │   └── 09_Deeper_Comparative_Analysis.ipynb # Deep dive into the Top 3 performing models
-├── models/                               # Serialized (.pkl) trained models
+├── models/                               # (.pkl) trained models
 ├── results/                              # Evaluation metrics, CSVs, and visualizations
-├── requirements.txt                      # Python dependencies
 └── README.md                             # Project overview and instructions
+```
+
+## Methodology
+
+1. **Data Preprocessing & Leakage Removal:** Conducted missing value imputation (median for numeric, mode for categorical) and robust scaling. Crucially, removed 5 features (e.g., `LOWEST_RATING`, `DECK_COND_058`) that acted as direct proxies for the target variable, preventing artificial performance inflation.
+2. **Feature Engineering & PCA:** Generated specialized features based on geometry, traffic, and inspection history. Applied Principal Component Analysis (PCA) to evaluate dimensionality reduction.
+3. **Class Imbalance Handling:** Addressed the extreme 14:1 class imbalance using SMOTE (Synthetic Minority Over-sampling Technique) and calculated class weights to prioritize the detection of the minority "Poor" class.
+4. **Modeling:** Trained and evaluated baseline models alongside advanced ensemble techniques (Random Forest, XGBoost, HistGradientBoosting) and Neural Networks. 
+5. **Evaluation:** Focused heavily on **Recall** as the primary business metric to minimize false negatives (missed failing bridges = safety gaps), alongside precision, F1-score, and translated operational cost projections. 
+
+## Best Performing Models
+
+A deeper comparative analysis (`Notebook 09`) identified the following top 3 models:
+1. **HistGradient Boosting (Original Dataset):** 87.0% Recall (Poor), 47.0% Precision, 74.9% Accuracy
+2. **Random Forest (Original Dataset - 102 features):** 87.0% Recall (Poor), 48.1% Precision, 75.6% Accuracy 
+3. **Random Forest (Engineered Dataset - 130 features):** 87.0% Recall (Poor), 48.4% Precision, 75.4% Accuracy
+
+## Datasets available here - 
+https://www.fhwa.dot.gov/bridge/nbi/ascii.cfm
