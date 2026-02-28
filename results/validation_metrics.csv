@@ -1,0 +1,6 @@
+model,val_score_mean,n_epochs,n_iters
+MLP_orig,0.7748227996384467,41.0,
+MLP_pca,0.7733423985587559,46.0,
+MLP_smote,0.7769627240832649,48.0,
+GB_orig,,,232.0
+GB_smote,,,248.0
